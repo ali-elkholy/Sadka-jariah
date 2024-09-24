@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صدقة جارية</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/gsap.min.js"></script>
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+        }
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="bg-gray-100 p-6">
+     <div class="main__bg"></div>
+    <div class="main__bg layer1"></div>
+    <div class="main__bg layer2"></div>
+    <div class="container mx-auto text-center">
+        
+        <div id="deceased-section" class="text-xl mb-1"></div>
+        
+        <!-- المرحلة الأولى: قراءة الآيات -->
+        <div id="stage-1" class="hidden">
+            <h3 class=" font-bold mb-4">المرحلة الأولى: قراءة أيات من القرأن</h3>
+            <div id="quran-verses" class="text-lg"></div>
+            <button id="complete-stage-1" class="bg-green-500 text-white px-6 py-3 rounded-full text-lg mt-4 hover:bg-green-600 transition duration-300">إتمام القراءة</button>
+        </div>
+
+        <!-- المرحلة الثانية: السبحة -->
+        <div id="stage-2" class="hidden p-9">
+            <h3 class="font-bold mb-9">المرحلة الثانية: السبحة الإلكترونية</h3>
+            <div class="mb-4">
+                <p>سبحان الله: <span id="subhanallah-counter">0</span>/33</p>
+                <button id="subhanallah-btn" class="bg-blue-500 text-white px-6 py-3 rounded-full text-lg mt-2 hover:bg-blue-600 transition duration-300">سبحان الله</button>
+            </div>
+            <div class="mb-4 hidden" id="alhamdulillah-div">
+                <p>الحمد لله: <span id="alhamdulillah-counter">0</span>/33</p>
+                <button id="alhamdulillah-btn" class="bg-red-500 text-white px-6 py-3 rounded-full text-lg mt-2 hover:bg-red-600 transition duration-300">الحمد لله</button>
+            </div>
+            <div class="mb-4 hidden" id="allahuakbar-div">
+                <p>الله أكبر: <span id="allahuakbar-counter">0</span>/33</p>
+                <button id="allahuakbar-btn" class="bg-yellow-500 text-white px-6 py-3 rounded-full text-lg mt-2 hover:bg-yellow-600 transition duration-300">الله أكبر</button>
+            </div>
+            <div class="mb-4 hidden" id="laailaahaillallah-div">
+                <p>لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير: <span id="laailaahaillallah-counter">0</span>/10</p>
+                <button id="laailaahaillallah-btn" class="bg-purple-500 text-white px-6 py-3 rounded-full text-lg mt-2 hover:bg-purple-600 transition duration-300">لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير</button>
+            </div>
+        </div>
+
+        <!-- المرحلة الثالثة: الأدعية -->
+        <div id="stage-3" class="hidden p-9">
+            <h3 class=" font-bold mb-4">المرحلة الثالثة: أدعية للمتوفي</h3>
+            <div id="dua-section" class="text-lg"></div>
+            <button id="next-dua-btn" class="bg-blue-500 text-white px-6 py-3 rounded-full text-lg mt-4 hover:bg-blue-600 transition duration-300">الدعاء التالي</button>
+            
+        </div>
+
+        <!-- رسالة الإتمام -->
+        <div id="completion-message" class="hidden">
+            <h2 class="text-2xl font-bold mb-4">تقبل  الله منا ومنكم صالح الأعمال</h2>
+            <p>لا تنسونا من صالح دعائكم انا وجميع المسلمين والمسلمات .</p>
+            <img src="Give%20a%20Hand,%20Change%20a%20Life.gif" class="img">
+
+        </div>
+    </div>
+
+    <script>
+        // جلب اسم المتوفي من الرابط
+        const urlParams = new URLSearchParams(window.location.search);
+        const name = urlParams.get('name');
+        document.getElementById('deceased-section').textContent = `صدقة جارية على روح المرحوم/ة: ${name}`;
+
+        // GSAP Animation function
+        function showSection(id) {
+            gsap.fromTo(id, { opacity: 0, y: 50 }, { opacity: 1, y: 0, display: "block", duration: 1 });
+        }
+
+        // المرحلة الأولى: جلب الآيات من JSON وتقسيمها لسكاشن
+   async function fetchQuranVerses() {
+    const response = await fetch('quran.json'); // ملف JSON يحتوي على الآيات مقسمة لسكاشن
+    const data = await response.json();
+    const randomSection = data.sections[Math.floor(Math.random() * data.sections.length)]; // اختيار سكشن عشوائي
+    const quranContainer = document.getElementById('quran-verses');
+    quranContainer.innerHTML = randomSection.verses.map(verse => `<p>${verse}</p>`).join('');
+    showSection("#stage-1");
+}
+fetchQuranVerses();
+
+        // الانتقال إلى المرحلة الثانية بعد قراءة الآيات
+        document.getElementById('complete-stage-1').addEventListener('click', function() {
+            gsap.to("#stage-1", { opacity: 0, y: -50, display: "none", duration: 1 });
+            setTimeout(() => showSection("#stage-2"), 1000);
+        });
+
+        // المرحلة الثانية: السبحة
+        let subhanallahCount = 0, alhamdulillahCount = 0, allahuakbarCount = 0, laailaahaillallahCount = 0;
+
+        document.getElementById('subhanallah-btn').addEventListener('click', function() {
+            if (subhanallahCount < 33) {
+                subhanallahCount++;
+                document.getElementById('subhanallah-counter').textContent = subhanallahCount;
+                if (subhanallahCount === 33) {
+                    gsap.to("#subhanallah-btn", { opacity: 0, y: -50, display: "none", duration: 1 });
+                    setTimeout(() => showSection("#alhamdulillah-div"), 1000);
+                }
+            }
+        });
+
+        document.getElementById('alhamdulillah-btn').addEventListener('click', function() {
+            if (alhamdulillahCount < 33) {
+                alhamdulillahCount++;
+                document.getElementById('alhamdulillah-counter').textContent = alhamdulillahCount;
+                if (alhamdulillahCount === 33) {
+                    gsap.to("#alhamdulillah-btn", { opacity: 0, y: -50, display: "none", duration: 1 });
+                    setTimeout(() => showSection("#allahuakbar-div"), 1000);
+                }
+            }
+        });
+
+        document.getElementById('allahuakbar-btn').addEventListener('click', function() {
+            if (allahuakbarCount < 33) {
+                allahuakbarCount++;
+                document.getElementById('allahuakbar-counter').textContent = allahuakbarCount;
+                if (allahuakbarCount === 33) {
+                    gsap.to("#allahuakbar-btn", { opacity: 0, y: -50, display: "none", duration: 1 });
+                    setTimeout(() => showSection("#laailaahaillallah-div"), 1000);
+                }
+            }
+        });
+
+        document.getElementById('laailaahaillallah-btn').addEventListener('click', function() {
+            if (laailaahaillallahCount < 10) {
+                laailaahaillallahCount++;
+                document.getElementById('laailaahaillallah-counter').textContent = laailaahaillallahCount;
+                if (laailaahaillallahCount === 10) {
+                    gsap.to("#laailaahaillallah-btn", { opacity: 0, y: -50, display: "none", duration: 1 });
+                                gsap.to("#stage-2", { opacity: 0, y: -50, display: "none", duration: 1 });
+
+                    setTimeout(() => showSection("#stage-3"), 1000);
+                   
+                    fetchDuas(); // جلب الأدعية بعد انتهاء التسبيح
+                }
+                
+            }
+        });
+
+        // المرحلة الثالثة: جلب الأدعية من JSON
+        let currentDuaIndex = 0;
+        let duas = [];
+
+        async function fetchDuas() {
+            const response = await fetch('duas.json'); // ملف JSON يحتوي على الأدعية
+            duas = await response.json();
+            showDua();
+        }
+
+        function showDua() {
+            const duaSection = document.getElementById('dua-section');
+            duaSection.textContent = duas[currentDuaIndex];
+        }
+
+        document.getElementById('next-dua-btn').addEventListener('click', function() {
+            if (currentDuaIndex < duas.length - 1) {
+                currentDuaIndex++;
+                showDua();
+            } else {
+                gsap.to("#stage-3", { opacity: 0, display: "none", duration: 1 });
+                setTimeout(() => {
+                    showSection("#completion-message");
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>

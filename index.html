@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موقع صدقة جارية</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="main__bg"></div>
+    <div class="main__bg layer1"></div>
+    <div class="main__bg layer2"></div>
+    <div class="container1 mx-auto text-center input">
+       <img src="Give%20a%20Hand,%20Change%20a%20Life.gif" class="img">
+        <div class="max-w-md mx-auto">
+            <input type="text" id="deceased-name" class="border rounded p-3 w-full mb-4 l" placeholder="أدخل اسم الشخص">
+            <button id="generate-link" class="btn btn-danger">توليد الرابط</button>
+            <div id="link-section" class="hidden mt-6">
+                <p class="text-lg font-bold">رابط الصدقة الجارية:</p>
+                <input type="text" id="generated-link"  class="border rounded p-3 w-full mb-4 text-xl">
+            </div>
+            <div id="share-section" class="hidden mt-6">
+                <p class="text-lg font-bold">شارك الرابط:</p>
+                <div class="flex justify-center space-x-4 mt-2">
+                    <a id="share-facebook" href="#" class="bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transition duration-300" target="_blank">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a id="share-whatsapp" href="#" class="bg-green-600 text-white p-3 rounded-full hover:bg-green-700 transition duration-300" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a id="share-instagram" href="#" class="bg-pink-600 text-white p-3 rounded-full hover:bg-pink-700 transition duration-300" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <button id="copy-link" class="bg-gray-600 text-white p-3 rounded-full hover:bg-gray-700 transition duration-300">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+   document.getElementById('generate-link').addEventListener('click', function() {
+    const name = document.getElementById('deceased-name').value.trim();
+    if (name) {
+        const link = `${window.location.origin}/sadaqah.html?name=${encodeURIComponent(name)}`;
+        
+        Swal.fire({
+            title: 'رابط الصدقة الجارية',
+            html: `
+                <div class="input-group mb-3">
+                    <input type="text" id="generated-link-input" value="${link}" readonly class="form-control">
+                    <button id="copy-link-swal" class="btn btn-info">
+                        <i class="fas fa-copy"></i> <!-- أيقونة النسخ -->
+                    </button>
+                </div>
+                <div class="d-flex justify-content-start mb-3">
+                    <span id="copy-badge" class="badge bg-success d-none">تم النسخ!</span>
+                </div>
+                <h4 class="text-center font-weight-bold mb-3">مشاركة</h4> 
+                <div class="d-flex justify-content-between mb-3">
+                    <a id="share-facebook" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}" target="_blank" class="btn btn-primary">
+                        <i class="fab fa-facebook-f"></i> فيسبوك
+                    </a>
+                    <a id="share-whatsapp" href="https://wa.me/?text=${encodeURIComponent(link)}" target="_blank" class="btn btn-success">
+                        <i class="fab fa-whatsapp"></i> واتساب
+                    </a>
+                    <a id="share-instagram" href="https://www.instagram.com/?url=${encodeURIComponent(link)}" target="_blank" class="btn btn-danger">
+                        <i class="fab fa-instagram"></i> انستجرام
+                    </a>
+                    <button id="preview-link" class="btn btn-warning">معاينة الرابط</button>
+                </div>
+            `,
+            showConfirmButton: false,
+            didOpen: () => {
+                // زر نسخ الرابط داخل الـ Swal
+                document.getElementById('copy-link-swal').addEventListener('click', function() {
+                    const linkInput = document.getElementById('generated-link-input');
+                    linkInput.select();
+                    document.execCommand('copy');
+                    
+                    // إظهار شارة "تم النسخ"
+                    const copyBadge = document.getElementById('copy-badge');
+                    copyBadge.classList.remove('d-none');
+                    setTimeout(() => {
+                        copyBadge.classList.add('d-none');
+                    }, 2000);
+                });
+
+                // زر معاينة الرابط
+                document.getElementById('preview-link').addEventListener('click', function() {
+                    const generatedLink = document.getElementById('generated-link-input').value;
+                    window.open(generatedLink, '_blank');
+                });
+            }
+        });
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: 'خطأ',
+            text: 'الرجاء إدخال اسم الشخص.',
+        });
+    }
+});
+
+    </script>
+      
+</body>
+</html>

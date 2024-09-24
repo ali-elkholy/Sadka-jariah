@@ -1,0 +1,84 @@
+
+h1{
+    color: white
+}
+  body {
+            display: grid;
+            place-items: center;
+      text-align: center;
+      color: white
+        }
+.img{
+    margin: auto;
+    width: 200px;
+    padding-bottom: 20px;
+    border-radius: 50%;
+    z-index: 1
+}
+#completion-message{
+   margin-top: 90px;
+    
+    
+}
+.container1{
+  
+    padding-top: 70px
+    
+}
+#deceased-section{
+    text-align: center;
+    direction: rtl;
+    font-size: 20px;
+    font-weight: bold
+}
+.container{
+    background-color: #18aa;
+    padding: 20px;
+    width: 80%;
+    min-height: 540px;
+    height: auto;
+    border-radius: 5px
+}
+        .main__bg {
+            background-image: linear-gradient(-60deg, #404258 50%, #6Beded 50%);
+            animation: slide 3s ease-in-out infinite alternate;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: -50%;
+            right: -50%;
+            opacity: 0.4;
+            z-index: -1;
+           
+        }
+
+        .layer1 {
+            animation-direction: alternate-reverse;
+            animation-duration: 7s;
+        }
+
+        .layer2 {
+            animation-duration: 9s;
+        }
+
+        @keyframes slide {
+            0% {
+                transform: translateX(-25%);
+            }
+
+            100% {
+                transform: translateX(25%);
+            }
+        }
+a,#copy-link{
+    border-radius: 5px
+}
+input{
+    text-align: right;
+    color: darkgray;
+    direction: rtl;
+    height: 45px;
+
+}
+
+
